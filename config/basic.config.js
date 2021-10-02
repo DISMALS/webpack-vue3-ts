@@ -4,6 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+
 const node_env = process.env.NODE_ENV;
 const apiEnviroment = process.env.API_ENVIROMENT || '';
 
@@ -15,7 +16,6 @@ module.exports = {
     output: {
         filename: '[name].[fullhash].js',
         chunkFilename: '[id].[contenthash].js',
-        chunkFormat: 'module',
         clean: true,
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/'
@@ -79,7 +79,7 @@ module.exports = {
                     {
                         loader: 'ts-loader',
                         options: {
-                            appendTsSuffixTo: [/TS\.vue$/]
+                            appendTsSuffixTo: [/\.vue$/]
                         }
                     }
                 ],
@@ -94,9 +94,6 @@ module.exports = {
                 test: /\.vue$/,
                 loader: 'vue-loader',
                 options: {
-                    loaders: {
-                        ts: 'babel-loader'
-                    },
                     hotReload: node_env === 'development'
                 }
             },
@@ -112,6 +109,13 @@ module.exports = {
                     name: '[name].[ext]',
                     outputPath: 'assets/images',
                     quality: 85,
+                }
+            },
+            {
+                test: /\.ejs$/i,
+                loader: 'ejs-loader',
+                options: {
+                    esModule: false
                 }
             }
         ]
@@ -168,7 +172,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: '测试webpack',
             base: '/',
-            template: '../src/index.html'
+            template: '../index.ejs'
         }),
         new webpack.NormalModuleReplacementPlugin(
             /enviroment\/enviroment/,
